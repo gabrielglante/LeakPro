@@ -3,6 +3,7 @@
 import logging
 import pickle
 import time
+from pathlib import Path
 
 import torch
 from torch import nn
@@ -217,8 +218,9 @@ def save_model_and_metadata(  # noqa: PLR0913
     model_metadata_dict["current_idx"] += 1
 
     log_dir = configs["run"]["log_dir"]
+    Path(log_dir).mkdir(parents=True, exist_ok=True)
 
-    with open(f"{log_dir}/model_{model_idx}.pkl", "wb") as f:
+    with open(f"{log_dir}/target_model.pkl", "wb") as f:
         torch.save(model.state_dict(), f)
     meta_data = {}
 
@@ -228,11 +230,8 @@ def save_model_and_metadata(  # noqa: PLR0913
     meta_data["optimizer"] = configs["train"]["optimizer"]
     meta_data["batch_size"] = configs["train"]["batch_size"]
     meta_data["epochs"] = configs["train"]["epochs"]
-    meta_data["model_name"] = configs["train"]["model_name"]
-    meta_data["model_idx"] = model_idx
     meta_data["learning_rate"] = configs["train"]["learning_rate"]
     meta_data["weight_decay"] = configs["train"]["weight_decay"]
-    meta_data["model_path"] = f"{log_dir}/model_{model_idx}.pkl"
     meta_data["train_acc"] = train_acc
     meta_data["test_acc"] = test_acc
     meta_data["train_loss"] = train_loss
