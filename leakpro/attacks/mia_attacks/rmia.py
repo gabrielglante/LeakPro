@@ -1,36 +1,68 @@
 """Implementation of the RMIA attack."""
-import numpy as np
+from logging import Logger
 
-from leakpro.dataset import get_dataset_subset
+import numpy as np
+from torch import nn
+
+from leakpro.attacks.mia_attacks.abstract_mia import AbstractMIA
+from leakpro.attacks.utils.attack_data import get_attack_data
+from leakpro.attacks.utils.shadow_model_handler import ShadowModelHandler
 from leakpro.import_helper import Self
 from leakpro.metrics.attack_result import CombinedMetricResult
-from leakpro.mia_attacks.attack_utils import AttackUtils
-from leakpro.mia_attacks.attacks.attack import AttackAbstract
 from leakpro.signals.signal import ModelLogits
 
 
-class AttackRMIA(AttackAbstract):
+class AttackRMIA(AbstractMIA):
     """Implementation of the RMIA attack."""
 
-    def __init__(self:Self, attack_utils: AttackUtils, configs: dict) -> None:
+    def __init__(self:Self,
+                 population: np.ndarray,
+                 audit_dataset: dict,
+                 target_model: nn.Module,
+                 logger:Logger,
+                 configs: dict
+                 ) -> None:
         """Initialize the RMIA attack.
 
         Args:
         ----
-            attack_utils (AttackUtils): Utility class for the attack.
+            population (np.ndarray): The population data.
+            audit_dataset (dict): The audit dataset.
+            target_model (nn.Module): The target model.
+            logger (Logger): The logger object.
             configs (dict): Configuration parameters for the attack.
 
         """
         # Initializes the parent metric
-        super().__init__(attack_utils)
+        super().__init__(population, audit_dataset, target_model, logger)
 
-        self.shadow_models = attack_utils.attack_objects.shadow_models
-        self.offline_a = 0.33 # parameter from which we compute p(x) from p_OUT(x) such that p_IN(x) = a p_OUT(x) + b.
-        self.offline_b: 0.66
-        self.gamma = 2.0 # threshold for the attack
-        self.temperature = 2.0 # temperature for the softmax
+        self.shadow_models = []
+        self.num_shadow_models = configs.get("num_shadow_models", 4)
+        if self.num_shadow_models < 1:
+            raise ValueError("num_shadow_models must be greater than 0")
 
-        self.f_attack_data_size = configs["audit"].get("f_attack_data_size", 0.3)
+        self.offline_a = configs.get("data_fraction", 0.33)  # p_IN(x) = a p_OUT(x) + b.
+        if self.offline_a < 0 or self.offline_a > 1:
+            raise ValueError("data_fraction must be between 0 and 1")
+
+        self.offline_b = configs.get("offline_b", 0.66)
+        if self.offline_b < 0 or self.offline_b > 1:
+            raise ValueError("offline_b must be between 0 and 1")
+
+        self.gamma = configs.get("gamma", 2.0) # threshold for the attack
+        if self.gamma < 0:
+            raise ValueError("gamma must be greater than 0")
+
+        self.temperature = configs.get("temperature", 2.0) # temperature for the softmax
+        if self.temperature < 0:
+            raise ValueError("temperature must be greater than 0")
+
+        self.f_attack_data_size = configs.get("data_fraction", 0.5)
+        if self.f_attack_data_size <= 0 or self.f_attack_data_size > 1:
+            raise ValueError("The data fraction must be between 0 and 1")
+
+        self.online = configs.get("online", False)
+        self.include_test_data = configs.get("include_test_data", True)
 
         self.signal = ModelLogits()
         self.epsilon = 1e-6
@@ -88,22 +120,34 @@ class AttackRMIA(AttackAbstract):
 
         Signals are computed on the auxiliary model(s) and dataset.
         """
-        # sample dataset to compute histogram
-        all_index = np.arange(self.population_size)
-        attack_data_size = np.round(
-            self.f_attack_data_size * self.population_size
-        ).astype(int)
+        self.logger.info("Preparing shadow models for RMIA attack")
+        # Check number of shadow models that are available
 
-        self.attack_data_index = np.random.choice(
-            all_index, attack_data_size, replace=False
+        # sample dataset to compute histogram
+        self.logger.info("Preparing attack data for training the RMIA attack")
+        # Get all available indices to sample from for shadow models
+        self.attack_data_index = get_attack_data(
+            self.population_size,
+            self.train_indices,
+            self.test_indices,
+            self.include_test_data,
+            self.logger
         )
-        attack_data = get_dataset_subset(self.population, self.attack_data_index)
+        attack_data = self.population.subset(self.attack_data_index)
+
+        ShadowModelHandler().create_shadow_models(
+            self.num_shadow_models,
+            attack_data,
+            self.f_attack_data_size,
+        )
+
+        self.shadow_models = ShadowModelHandler().get_shadow_models(self.num_shadow_models)
 
         # compute the ratio of p(z|theta) (target model) to p(z)=sum_{theta'} p(z|theta') (shadow models)
         # for all points in the attack dataset output from signal: # models x # data points x # classes
 
         # get the true label indices
-        z_label_indices = np.array(attack_data.y)
+        z_label_indices = np.array(attack_data._labels)
 
         # run points through real model to collect the logits
         logits_theta = np.array(self.signal([self.target_model], attack_data))
@@ -139,8 +183,8 @@ class AttackRMIA(AttackAbstract):
 
         """
         # get the logits for the audit dataset
-        audit_data = get_dataset_subset(self.population, self.audit_dataset["data"])
-        x_label_indices = np.array(audit_data.y)
+        audit_data = self.population.subset(self.audit_dataset["data"])
+        x_label_indices = np.array(audit_data._labels)
 
         # run target points through real model to get logits
         logits_theta = np.array(self.signal([self.target_model], audit_data))

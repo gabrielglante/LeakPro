@@ -1,14 +1,15 @@
 """Implementation of the RMIA attack."""
+from logging import Logger
+
 import numpy as np
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
 
-from leakpro.dataset import get_dataset_subset
+from leakpro.attacks.mia_attacks.abstract_mia import AbstractMIA
+from leakpro.attacks.utils.attack_data import get_attack_data
 from leakpro.import_helper import Self
 from leakpro.metrics.attack_result import CombinedMetricResult
-from leakpro.mia_attacks.attack_utils import AttackUtils
-from leakpro.mia_attacks.attacks.attack import AttackAbstract
 from leakpro.signals.signal import ModelRescaledLogits
 
 
@@ -86,26 +87,51 @@ class PinballLoss(torch.nn.Module):
         losses = torch.max((quantiles * errors), ((quantiles - 1) * errors))
         return torch.mean(torch.sum(losses, dim=1))
 
-class AttackQMIA(AttackAbstract):
+class AttackQMIA(AbstractMIA):
     """Implementation of the RMIA attack."""
 
-    def __init__(self:Self, attack_utils: AttackUtils, configs: dict) -> None:
+    def __init__(
+        self:Self,
+        population: np.ndarray,
+        audit_dataset: dict,
+        target_model: nn.Module,
+        logger:Logger,
+        configs: dict
+    ) -> None:
         """Initialize the QMIA attack.
 
         Args:
         ----
-            attack_utils (AttackUtils): Utility class for the attack.
+            population (np.ndarray): The population data.
+            audit_dataset (dict): The audit dataset.
+            target_model (nn.Module): The target model.
+            logger (Logger): The logger object.
             configs (dict): Configuration parameters for the attack.
 
         """
         # Initializes the parent metric
-        super().__init__(attack_utils)
+        super().__init__(population, audit_dataset, target_model, logger)
 
-        self.f_attack_data_size = configs["audit"].get("f_attack_data_size", 0.3)
-        self.quantiles = [0, 0.5, 0.9, 0.95, 0.99, 0.995, 0.999, 0.9995, 0.9999, 0.99995, 0.99999]
+        self.f_attack_data_size = configs.get("data_fraction", 0.5)
+        if self.f_attack_data_size <= 0 or self.f_attack_data_size > 1:
+            raise ValueError("The data fraction must be between 0 and 1")
+
+        self.quantiles = configs.get("quantiles", [0, 0.5, 0.9, 0.95, 0.99, 0.995, 0.999, 0.9995, 0.9999, 0.99995, 0.99999])
+        if not all(0 <= q <= 1 for q in self.quantiles):
+            raise ValueError("Quantiles must be between 0 and 1")
+        if len(self.quantiles) < 1:
+            raise ValueError("At least one quantile are required")
+        if not isinstance(self.quantiles, list):
+            raise ValueError("Quantiles must be a list")
+
+        self.epochs = configs.get("epochs", 200)
+        if self.epochs < 1:
+            raise ValueError("The number of epochs for the quantile regression must be greater than 0")
+
+        self.include_test_data = configs.get("include_test_data", True)
+
         self.signal = ModelRescaledLogits()
         self.quantile_regressor = QuantileRegressor(len(self.quantiles))
-        self.logger = attack_utils.attack_objects.logger
 
     def description(self:Self) -> dict:
         """Return a description of the attack."""
@@ -129,10 +155,15 @@ class AttackQMIA(AttackAbstract):
         Signals are computed on the auxiliary model(s) and dataset.
         """
         # sample dataset to train quantile regressor
-        all_index = np.arange(self.population_size)
-        attack_data_size = np.round(self.f_attack_data_size * self.population_size).astype(int)
-        self.attack_data_index = np.random.choice(all_index, attack_data_size, replace=False)
-        attack_data = get_dataset_subset(self.population, self.attack_data_index)
+        self.logger.info("Preparing attack data for training the quantile regressor")
+        self.attack_data_index = get_attack_data(
+            self.population_size,
+            self.train_indices,
+            self.test_indices,
+            self.include_test_data,
+            self.logger
+        )
+        attack_data = self.population.subset(self.attack_data_index)
 
         # create labels and change dataset to be used for regression
         regression_labels = np.array(self.signal([self.target_model], attack_data)).squeeze()
@@ -141,16 +172,18 @@ class AttackQMIA(AttackAbstract):
         attack_dataloader = DataLoader(attack_data, batch_size=64, shuffle=True,)
 
         # train quantile regressor
+        self.logger.info("Training the quantile regressor")
         optimizer = torch.optim.Adam(self.quantile_regressor.parameters(), lr=1e-3, weight_decay=1e-4)
         criterion = PinballLoss(self.quantiles)
-        self.train_quantile_regressor(attack_dataloader, criterion, optimizer)
+        self.train_quantile_regressor(attack_dataloader, criterion, optimizer, self.epochs)
+        self.logger.info("Training of quantile regressor completed")
 
     def train_quantile_regressor(
         self:Self,
         attack_dataloader: DataLoader,
         criterion:torch.nn.Module,
         optimizer:torch.optim,
-        epochs: int = 200
+        epochs: int
     ) -> None:
         """Train the quantile regressor model.
 
@@ -216,14 +249,17 @@ class AttackQMIA(AttackAbstract):
             Result(s) of the metric.
 
         """
-        audit_dataset = get_dataset_subset(self.population, self.audit_dataset["data"])
+        audit_dataset = self.population.subset(self.audit_dataset["data"])
         self.target_logits = np.array(self.signal([self.target_model], audit_dataset)).squeeze()
 
         audit_dataloader = DataLoader(audit_dataset, batch_size=64, shuffle=False)
+        self.logger.info("Running the attack on the target model")
         score = []
         for data, _ in audit_dataloader:
             score.extend(self.quantile_regressor(data).detach().numpy())
         score = np.array(score).T
+
+        self.logger.info("Attack completed")
 
         # pick out the in-members and out-members signals
         self.in_member_signals = self.target_logits[self.audit_dataset["in_members"]]

@@ -3,9 +3,11 @@
 import logging
 import pickle
 import time
+from pathlib import Path
 
 import torch
 from torch import nn
+from tqdm import tqdm
 
 from leakpro.import_helper import Tuple
 
@@ -146,28 +148,29 @@ def train(  # noqa: PLR0913
         train_loss, train_acc = 0, 0
         # Loop over the training set
         model.train()
-        for data, target in train_loader:
-            # Cast target to long tensor
-            target = target.long()  # noqa: PLW2901
+        with tqdm(train_loader, desc=f"Epoch {epoch_idx + 1}/{epochs}") as pbar:
+            for data, target in pbar:
+                # Cast target to long tensor
+                target = target.long()  # noqa: PLW2901
 
-            # Move data to the device
-            data, target = data.to(device, non_blocking=True), target.to(device, non_blocking=True)  # noqa: PLW2901
+                # Move data to the device
+                data, target = data.to(device, non_blocking=True), target.to(device, non_blocking=True)  # noqa: PLW2901
 
-            # Set the gradients to zero
-            optimizer.zero_grad()
+                # Set the gradients to zero
+                optimizer.zero_grad()
 
-            # Get the model output
-            output = model(data)
-            # Calculate the loss
-            loss = criterion(output, target)
-            pred = output.data.max(1, keepdim=True)[1]
-            train_acc += pred.eq(target.data.view_as(pred)).sum()
-            # Perform the backward pass
-            loss.backward()
-            # Take a step using optimizer
-            optimizer.step()
-            # Add the loss to the total loss
-            train_loss += loss.item()
+                # Get the model output
+                output = model(data)
+                # Calculate the loss
+                loss = criterion(output, target)
+                pred = output.data.max(1, keepdim=True)[1]
+                train_acc += pred.eq(target.data.view_as(pred)).sum()
+                # Perform the backward pass
+                loss.backward()
+                # Take a step using optimizer
+                optimizer.step()
+                # Add the loss to the total loss
+                train_loss += loss.item()
 
         # Log the training loss and accuracy
         log_train_str = f"Epoch: {epoch_idx+1}/{epochs} | Train Loss: {train_loss/len(train_loader):.8f} | Train Acc: {float(train_acc)/len(train_loader.dataset):.8f} | One step uses {time.time() - start_time:.2f} seconds"  # noqa: E501
@@ -182,7 +185,7 @@ def train(  # noqa: PLR0913
     model.to("cpu")
 
     save_model_and_metadata(
-        model, data_split, configs, train_acc, test_acc, train_loss, test_loss
+        model, data_split, configs, train_acc, test_acc, train_loss, test_loss, type(optimizer).__name__, type(criterion).__name__
     )
 
     # Return the model
@@ -197,6 +200,8 @@ def save_model_and_metadata(  # noqa: PLR0913
     test_acc: float,
     train_loss: float,
     test_loss: float,
+    optimizer: str,
+    loss: str
 ) -> None:
     """Save the model and metadata.
 
@@ -209,36 +214,36 @@ def save_model_and_metadata(  # noqa: PLR0913
         test_acc (float): Testing accuracy.
         train_loss (float): Training loss.
         test_loss (float): Testing loss.
+        optimizer (str): Optimizer used for training.
+        loss (str): Loss function used for training.
 
     """
     # Save model and metadata
-    model_metadata_dict = {"model_metadata": {}, "current_idx": 0}
-    model_idx = model_metadata_dict["current_idx"]
-    model_metadata_dict["current_idx"] += 1
+    model_metadata_dict = {"model_metadata": {}}
 
     log_dir = configs["run"]["log_dir"]
+    Path(log_dir).mkdir(parents=True, exist_ok=True)
 
-    with open(f"{log_dir}/model_{model_idx}.pkl", "wb") as f:
+    with open(f"{log_dir}/target_model.pkl", "wb") as f:
         torch.save(model.state_dict(), f)
     meta_data = {}
 
-    meta_data["train_split"] = data_split["train_indices"]
-    meta_data["test_split"] = data_split["test_indices"]
+    meta_data["init_params"] = model.init_params if hasattr(model, "init_params") else {}
+    meta_data["train_indices"] = data_split["train_indices"]
+    meta_data["test_indices"] = data_split["test_indices"]
     meta_data["num_train"] = len(data_split["train_indices"])
-    meta_data["optimizer"] = configs["train"]["optimizer"]
+    meta_data["optimizer"] = optimizer.lower()
+    meta_data["loss"] = loss.lower()
     meta_data["batch_size"] = configs["train"]["batch_size"]
     meta_data["epochs"] = configs["train"]["epochs"]
-    meta_data["model_name"] = configs["train"]["model_name"]
-    meta_data["model_idx"] = model_idx
     meta_data["learning_rate"] = configs["train"]["learning_rate"]
     meta_data["weight_decay"] = configs["train"]["weight_decay"]
-    meta_data["model_path"] = f"{log_dir}/model_{model_idx}.pkl"
     meta_data["train_acc"] = train_acc
     meta_data["test_acc"] = test_acc
     meta_data["train_loss"] = train_loss
     meta_data["test_loss"] = test_loss
     meta_data["dataset"] = configs["data"]["dataset"]
 
-    model_metadata_dict["model_metadata"][model_idx] = meta_data
-    with open(f"{log_dir}/models_metadata.pkl", "wb") as f:
+    model_metadata_dict["model_metadata"] = meta_data
+    with open(f"{log_dir}/model_metadata.pkl", "wb") as f:
         pickle.dump(model_metadata_dict, f)
