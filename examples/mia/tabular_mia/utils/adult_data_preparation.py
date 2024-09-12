@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import joblib
 import pickle
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 import urllib.request
 from torch import from_numpy
@@ -11,9 +11,10 @@ from torch.utils.data import Dataset, Subset, DataLoader
 
 
 class AdultDataset(Dataset):
-    def __init__(self, x, y):
-        self.x = from_numpy(x).float()  # Convert features to torch tensors
-        self.y = from_numpy(y).float()     # Convert labels to torch tensors
+    def __init__(self, x, y, column_info):
+        self.x = x  # Convert features to torch tensors
+        self.y = y     # Convert labels to torch tensors
+        self.column_info = column_info
 
     def __len__(self):
         return len(self.y)
@@ -72,23 +73,36 @@ def get_adult_dataset(path):
 
         # Categorical and numerical columns
         categorical_features = [col for col in x.columns if x[col].dtype == "object"]
-        numerical_features = [col for col in x.columns if x[col].dtype in ["int64", "float64"]]
+        categorical_indices = [x.columns.get_loc(col) for col in categorical_features]
 
-        # OneHotEncoding categorical features
-        onehot_encoder = OneHotEncoder(sparse_output=False, handle_unknown="ignore")
-        x_categorical = onehot_encoder.fit_transform(x[categorical_features])
+        numerical_features = [col for col in x.columns if x[col].dtype in ["int64", "float64"]]
+        numerical_indices = [x.columns.get_loc(col) for col in numerical_features]
 
         # Scaling numerical features
         scaler = StandardScaler()
         x_numerical = scaler.fit_transform(x[numerical_features])
+        
+        # Label encode the categories
+        x[categorical_features] = x[categorical_features].apply(LabelEncoder().fit_transform)
 
         # Concatenate numerical and categorical features
-        x = np.hstack([x_numerical, x_categorical])
+        x_combined = np.hstack([x_numerical, x[categorical_features].values])
+        x_tensor = from_numpy(x_combined).float()
 
         # Label encode the target variable
-        y = LabelEncoder().fit_transform(y)
+        y_encoded = LabelEncoder().fit_transform(y)
+        y_tensor = from_numpy(y_encoded).float()
         
-        dataset = AdultDataset(x, y)
+        #----------------
+        # Create column_info dictionary to store mappings
+        column_info = {
+            'numerical': list(range(x_numerical.shape[1])),  
+            'categorical': list(range(x_numerical.shape[1], x_combined.shape[1]))
+        }
+        
+        #--------------------
+        # Create dataset to be stored
+        dataset = AdultDataset(x_tensor, y_tensor, column_info)
         with open(f"{path}/adult_data.pkl", "wb") as file:
             pickle.dump(dataset, file)
             print(f"Save data to {path}.pkl")
