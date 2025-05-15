@@ -1,0 +1,30 @@
+{
+  "model_tag": "Pythia70M-dedup",
+  "domain": "hackernews",
+  "combiner_best": "george",
+  "attack_edgington_auc": 0.5906807206311614,
+  "attack_edgington_tpr01": 0.008830022075055188,
+  "attack_logistic_auc": 0.5493033931260325,
+  "attack_logistic_tpr01": 0.04856512141280353,
+  "attack_bestpv_auc": 0.5550243897684799,
+  "attack_bestpv_tpr01": 0.019867549668874173,
+  "final_feature_groups": [
+    "cal",
+    "cal",
+    "calppl",
+    "calppl",
+    "cb",
+    "cb",
+    "cbm",
+    "cbm",
+    "cbpm",
+    "cbpm",
+    "cut",
+    "cut",
+    "lz",
+    "lz",
+    "nei",
+    "ppl",
+    "ppl"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "model_tag": "pythia70m",
+  "domain": "arxiv",
+  "nei_K": 0,
+  "nei_weight": 0,
+  "auc_fisher": 0.24081632653061222,
+  "auc_pearson": 0.6848000000000001,
+  "auc_george": 0.7517877551020409,
+  "auc_edgington": 0.7509183673469387,
+  "tpr01_fisher": 0.002857142857142857,
+  "tpr01_pearson": 0.05714285714285714,
+  "tpr01_george": 0.21142857142857144,
+  "tpr01_edgington": 0.11142857142857143,
+  "auc_log": 0.7632816326530611,
+  "tpr01_log": 0.19142857142857142
+}

@@ -1,0 +1,33 @@
+{
+  "model_tag": "pythia1.4B-dedup",
+  "domain": "pubmed_central",
+  "combiner_best": "george",
+  "attack_edgington_auc": 0.7835147376960518,
+  "attack_edgington_tpr01": 0.046511627906976744,
+  "attack_logistic_auc": 0.8271109383450513,
+  "attack_logistic_tpr01": 0.28488372093023256,
+  "attack_bestpv_auc": 0.7994524067063277,
+  "attack_bestpv_tpr01": 0.18895348837209303,
+  "final_feature_groups": [
+    "apen",
+    "apen",
+    "cal",
+    "cal",
+    "calppl",
+    "calppl",
+    "cb",
+    "cb",
+    "cbm",
+    "cbm",
+    "cbpm",
+    "cbpm",
+    "cut",
+    "cut",
+    "lz",
+    "lz",
+    "ppl",
+    "ppl",
+    "slope",
+    "slope"
+  ]
+}

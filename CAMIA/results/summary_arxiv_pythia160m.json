@@ -1,0 +1,50 @@
+{
+  "model_suite": "pythia",
+  "model_size": "160m",
+  "domain": "arxiv",
+  "combiner_best": "george",
+  "attack_bestpv_auc": 0.760024,
+  "attack_bestpv_tpr01": 0.242,
+  "attack_edgington_auc": 0.735736,
+  "attack_edgington_tpr01": 0.024,
+  "attack_logistic_auc": 0.8055039999999999,
+  "attack_logistic_tpr01": 0.27,
+  "pca_dim_per_group": 2,
+  "cut_tprimes": [
+    "T",
+    "200",
+    "300"
+  ],
+  "cb_tau_list": [
+    1,
+    2,
+    3
+  ],
+  "lz_bin_list": [
+    3,
+    4,
+    5
+  ],
+  "final_feature_groups": [
+    "apen",
+    "apen",
+    "cal",
+    "cal",
+    "calppl",
+    "calppl",
+    "cb",
+    "cb",
+    "cbm",
+    "cbm",
+    "cbpm",
+    "cbpm",
+    "cut",
+    "cut",
+    "lz",
+    "lz",
+    "ppl",
+    "ppl",
+    "slope",
+    "slope"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "model_tag": "pythia70m-dedup",
+  "domain": "github",
+  "nei_K": 25,
+  "nei_weight": 18,
+  "auc_fisher": 0.1554719330013581,
+  "auc_pearson": 0.780613399728384,
+  "auc_george": 0.8484325486645541,
+  "auc_edgington": 0.841387505658669,
+  "tpr01_fisher": 0.005319148936170213,
+  "tpr01_pearson": 0.031914893617021274,
+  "tpr01_george": 0.4946808510638298,
+  "tpr01_edgington": 0.05851063829787234,
+  "auc_log": 0.864616342236306,
+  "tpr01_log": 0.5638297872340425
+}

@@ -1,0 +1,33 @@
+{
+  "model_tag": "pythia70m",
+  "domain": "hackernews",
+  "combiner_best": "edgington",
+  "attack_edgington_auc": 0.5776939607911933,
+  "attack_edgington_tpr01": 0.002207505518763797,
+  "attack_logistic_auc": 0.5594832585315459,
+  "attack_logistic_tpr01": 0.039735099337748346,
+  "attack_bestpv_auc": 0.5776939607911933,
+  "attack_bestpv_tpr01": 0.002207505518763797,
+  "final_feature_groups": [
+    "apen",
+    "apen",
+    "cal",
+    "cal",
+    "calppl",
+    "calppl",
+    "cb",
+    "cb",
+    "cbm",
+    "cbm",
+    "cbpm",
+    "cbpm",
+    "cut",
+    "cut",
+    "lz",
+    "lz",
+    "ppl",
+    "ppl",
+    "slope",
+    "slope"
+  ]
+}

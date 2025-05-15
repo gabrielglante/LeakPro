@@ -1,0 +1,16 @@
+{
+  "model_tag": "pythia70m-dedup",
+  "domain": "pubmed_central",
+  "nei_K": 25,
+  "nei_weight": 18,
+  "auc_fisher": 0.20735870740941048,
+  "auc_pearson": 0.741600189291509,
+  "auc_george": 0.7917877906976744,
+  "auc_edgington": 0.7898568482963764,
+  "tpr01_fisher": 0.0,
+  "tpr01_pearson": 0.0436046511627907,
+  "tpr01_george": 0.29651162790697677,
+  "tpr01_edgington": 0.11918604651162791,
+  "auc_log": 0.8281165494862087,
+  "tpr01_log": 0.3023255813953488
+}

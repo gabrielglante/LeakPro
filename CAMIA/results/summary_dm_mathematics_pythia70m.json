@@ -1,0 +1,33 @@
+{
+  "model_tag": "pythia70m",
+  "domain": "dm_mathematics",
+  "combiner_best": "george",
+  "attack_edgington_auc": 0.8505920886873268,
+  "attack_edgington_tpr01": 0.047619047619047616,
+  "attack_logistic_auc": 0.9584278155706727,
+  "attack_logistic_tpr01": 0.8095238095238095,
+  "attack_bestpv_auc": 0.8581506676744772,
+  "attack_bestpv_tpr01": 0.09523809523809523,
+  "final_feature_groups": [
+    "apen",
+    "apen",
+    "cal",
+    "cal",
+    "calppl",
+    "calppl",
+    "cb",
+    "cb",
+    "cbm",
+    "cbm",
+    "cbpm",
+    "cbpm",
+    "cut",
+    "cut",
+    "lz",
+    "lz",
+    "ppl",
+    "ppl",
+    "slope",
+    "slope"
+  ]
+}

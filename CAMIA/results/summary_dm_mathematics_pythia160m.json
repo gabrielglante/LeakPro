@@ -1,0 +1,33 @@
+{
+  "model_tag": "pythia160m",
+  "domain": "dm_mathematics",
+  "combiner_best": "george",
+  "attack_edgington_auc": 0.7273872511967749,
+  "attack_edgington_tpr01": 0.07936507936507936,
+  "attack_logistic_auc": 0.946082136558327,
+  "attack_logistic_tpr01": 0.0,
+  "attack_bestpv_auc": 0.7911312673217435,
+  "attack_bestpv_tpr01": 0.047619047619047616,
+  "final_feature_groups": [
+    "apen",
+    "apen",
+    "cal",
+    "cal",
+    "calppl",
+    "calppl",
+    "cb",
+    "cb",
+    "cbm",
+    "cbm",
+    "cbpm",
+    "cbpm",
+    "cut",
+    "cut",
+    "lz",
+    "lz",
+    "ppl",
+    "ppl",
+    "slope",
+    "slope"
+  ]
+}

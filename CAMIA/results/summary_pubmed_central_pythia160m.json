@@ -1,0 +1,33 @@
+{
+  "model_tag": "pythia160m",
+  "domain": "pubmed_central",
+  "combiner_best": "george",
+  "attack_edgington_auc": 0.7844400689561926,
+  "attack_edgington_tpr01": 0.0436046511627907,
+  "attack_logistic_auc": 0.8390008112493239,
+  "attack_logistic_tpr01": 0.29941860465116277,
+  "attack_bestpv_auc": 0.8097197809626824,
+  "attack_bestpv_tpr01": 0.32558139534883723,
+  "final_feature_groups": [
+    "apen",
+    "apen",
+    "cal",
+    "cal",
+    "calppl",
+    "calppl",
+    "cb",
+    "cb",
+    "cbm",
+    "cbm",
+    "cbpm",
+    "cbpm",
+    "cut",
+    "cut",
+    "lz",
+    "lz",
+    "ppl",
+    "ppl",
+    "slope",
+    "slope"
+  ]
+}

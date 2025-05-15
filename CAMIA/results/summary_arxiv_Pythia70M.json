@@ -1,0 +1,33 @@
+{
+  "model_tag": "Pythia70M",
+  "domain": "arxiv",
+  "combiner_best": "george",
+  "attack_edgington_auc": 0.7242163265306123,
+  "attack_edgington_tpr01": 0.017142857142857144,
+  "attack_logistic_auc": 0.7795183673469388,
+  "attack_logistic_tpr01": 0.21714285714285714,
+  "attack_bestpv_auc": 0.7335428571428572,
+  "attack_bestpv_tpr01": 0.18285714285714286,
+  "final_feature_groups": [
+    "apen",
+    "apen",
+    "cal",
+    "cal",
+    "calppl",
+    "calppl",
+    "cb",
+    "cb",
+    "cbm",
+    "cbm",
+    "cbpm",
+    "cbpm",
+    "cut",
+    "cut",
+    "lz",
+    "lz",
+    "ppl",
+    "ppl",
+    "slope",
+    "slope"
+  ]
+}

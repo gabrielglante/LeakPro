@@ -1,0 +1,33 @@
+{
+  "model_tag": "pythia1.4B-dedup",
+  "domain": "arxiv",
+  "combiner_best": "george",
+  "attack_edgington_auc": 0.7668734693877551,
+  "attack_edgington_tpr01": 0.022857142857142857,
+  "attack_logistic_auc": 0.8174204081632654,
+  "attack_logistic_tpr01": 0.26,
+  "attack_bestpv_auc": 0.7692081632653063,
+  "attack_bestpv_tpr01": 0.23142857142857143,
+  "final_feature_groups": [
+    "apen",
+    "apen",
+    "cal",
+    "cal",
+    "calppl",
+    "calppl",
+    "cb",
+    "cb",
+    "cbm",
+    "cbm",
+    "cbpm",
+    "cbpm",
+    "cut",
+    "cut",
+    "lz",
+    "lz",
+    "ppl",
+    "ppl",
+    "slope",
+    "slope"
+  ]
+}
