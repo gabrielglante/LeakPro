@@ -176,3 +176,7 @@ nohup.out
 img_align_celeba
 optuna_results.txtCAMIA/cache/neigh_pile_cc_ngram_7_0.2_member.json
 CAMIA/cache/neigh_pile_cc_ngram_7_0.2_nonmember.json
+CAMIA/cache/neigh_pile_cc_ngram_7_0.2_member.json
+CAMIA/cache/neigh_pile_cc_ngram_7_0.2_nonmember.json
+CAMIA/cache2/neigh2_pile_cc_ngram_7_0.2_member.json
+CAMIA/cache2/neigh2_pile_cc_ngram_7_0.2_nonmember.json
