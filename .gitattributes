@@ -1,0 +1,5 @@
+CAMIA/cache/*.json filter=lfs diff=lfs merge=lfs -text
+CAMIA/cache2/*.json filter=lfs diff=lfs merge=lfs -text
+CAMIA/results_combined/*.csv filter=lfs diff=lfs merge=lfs -text
+*.json !text !filter !merge !diff
+*.csv !text !filter !merge !diff

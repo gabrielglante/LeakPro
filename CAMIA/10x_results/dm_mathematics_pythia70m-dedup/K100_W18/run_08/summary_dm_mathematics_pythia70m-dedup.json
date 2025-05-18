@@ -3,14 +3,14 @@
   "domain": "dm_mathematics",
   "nei_K": 100,
   "nei_weight": 18,
-  "auc_fisher": 0.0904509952129,
-  "auc_pearson": 0.7853363567649282,
-  "auc_george": 0.9027462836986645,
-  "auc_edgington": 0.8657092466616275,
+  "auc_fisher": 0.0922146636432351,
+  "auc_pearson": 0.8364827412446459,
+  "auc_george": 0.9009826152683295,
+  "auc_edgington": 0.8672209624590577,
   "tpr01_fisher": 0.0,
-  "tpr01_pearson": 0.06349206349206349,
-  "tpr01_george": 0.09523809523809523,
-  "tpr01_edgington": 0.047619047619047616,
-  "auc_log": 0.9425547996976569,
-  "tpr01_log": 0.0
+  "tpr01_pearson": 0.0,
+  "tpr01_george": 0.047619047619047616,
+  "tpr01_edgington": 0.0,
+  "auc_log": 0.8966994205089444,
+  "tpr01_log": 0.19047619047619047
 }

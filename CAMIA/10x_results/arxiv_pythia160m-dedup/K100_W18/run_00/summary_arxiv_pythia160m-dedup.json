@@ -1,0 +1,16 @@
+{
+  "model_tag": "pythia160m-dedup",
+  "domain": "arxiv",
+  "nei_K": 100,
+  "nei_weight": 18,
+  "auc_fisher": 0.2366775510204082,
+  "auc_pearson": 0.7239836734693879,
+  "auc_george": 0.7599510204081632,
+  "auc_edgington": 0.7487428571428572,
+  "tpr01_fisher": 0.002857142857142857,
+  "tpr01_pearson": 0.02,
+  "tpr01_george": 0.18571428571428572,
+  "tpr01_edgington": 0.10285714285714286,
+  "auc_log": 0.7841714285714285,
+  "tpr01_log": 0.1657142857142857
+}
