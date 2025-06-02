@@ -3,14 +3,14 @@
   "domain": "pubmed_central",
   "nei_K": 100,
   "nei_weight": 18,
-  "auc_fisher": 0.20597282314764737,
-  "auc_pearson": 0.7760698350459707,
-  "auc_george": 0.7959031909140074,
-  "auc_edgington": 0.7960637506760412,
+  "auc_fisher": 0.20756151974040024,
+  "auc_pearson": 0.774379732287723,
+  "auc_george": 0.7937821119524067,
+  "auc_edgington": 0.7943863236884803,
   "tpr01_fisher": 0.0,
-  "tpr01_pearson": 0.12209302325581395,
+  "tpr01_pearson": 0.125,
   "tpr01_george": 0.2703488372093023,
-  "tpr01_edgington": 0.13953488372093023,
-  "auc_log": 0.8080465792320173,
-  "tpr01_log": 0.23837209302325582
+  "tpr01_edgington": 0.14534883720930233,
+  "auc_log": 0.803990332612223,
+  "tpr01_log": 0.21220930232558138
 }

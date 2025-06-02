@@ -1,0 +1,17 @@
+{
+  "model_tag": "pythia70m-dedup",
+  "domain": "arxiv",
+  "nei_K": 0,
+  "nei_weight": 0,
+  "nei_gamma": 1.0,
+  "auc_fisher": 0.2353877551020408,
+  "auc_pearson": 0.7391755102040816,
+  "auc_george": 0.7655510204081631,
+  "auc_edgington": 0.7620081632653061,
+  "tpr01_fisher": 0.002857142857142857,
+  "tpr01_pearson": 0.10285714285714286,
+  "tpr01_george": 0.18571428571428572,
+  "tpr01_edgington": 0.13142857142857142,
+  "auc_log": 0.7542122448979591,
+  "tpr01_log": 0.12571428571428572
+}

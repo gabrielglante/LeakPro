@@ -1,0 +1,2 @@
+domain,auc_edgington,auc_fisher,auc_pearson,auc_george,auc_log,tpr01_edgington,tpr01_fisher,tpr01_pearson,tpr01_george,tpr01_log
+pile_cc,"(0.548, 0, 0)","(0.47, 25, 72)","(0.547, 100, 9)","(0.549, 0, 0)","(0.537, 0, '-')","(0.047, 100, 72)","(0.017, 100, 72)","(0.034, 25, 72)","(0.038, 25, 36)","(0.02, 0, '-')"

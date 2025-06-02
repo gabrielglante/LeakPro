@@ -1,0 +1,15 @@
+{
+  "nei_K": 0,
+  "nei_weight": 0,
+  "nei_gamma": 1.0,
+  "auc_fisher": 0.06021667926429832,
+  "auc_pearson": 0.910304862685815,
+  "auc_george": 0.9407911312673217,
+  "auc_edgington": 0.927437641723356,
+  "tpr01_fisher": 0.0,
+  "tpr01_pearson": 0.15873015873015872,
+  "tpr01_george": 0.5238095238095238,
+  "tpr01_edgington": 0.30158730158730157,
+  "auc_log": 0.9244142101284958,
+  "tpr01_log": 0.0
+}

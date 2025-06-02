@@ -1,0 +1,16 @@
+{
+  "model_tag": "pythia70m-dedup",
+  "domain": "hackernews",
+  "nei_K": 100,
+  "nei_weight": 18,
+  "auc_fisher": 0.4201521375768119,
+  "auc_pearson": 0.5646584701450716,
+  "auc_george": 0.5764367059924272,
+  "auc_edgington": 0.5747018892933545,
+  "tpr01_fisher": 0.0,
+  "tpr01_pearson": 0.002207505518763797,
+  "tpr01_george": 0.024282560706401765,
+  "tpr01_edgington": 0.024282560706401765,
+  "auc_log": 0.5344356241685306,
+  "tpr01_log": 0.019867549668874173
+}

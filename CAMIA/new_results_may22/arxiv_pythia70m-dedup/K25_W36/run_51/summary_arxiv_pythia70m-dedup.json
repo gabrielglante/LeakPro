@@ -1,0 +1,16 @@
+{
+  "run": 51,
+  "K": 25,
+  "W": 36,
+  "gamma": 3,
+  "auc_edgington": 0.7551020408163266,
+  "auc_fisher": 0.163265306122449,
+  "auc_pearson": 0.7346938775510204,
+  "auc_george": 0.8163265306122449,
+  "tpr01_edgington": 0.0,
+  "tpr01_fisher": 0.0,
+  "tpr01_pearson": 0.0,
+  "tpr01_george": 0.0,
+  "auc_log": 0.6530612244897959,
+  "tpr01_log": 0.0
+}

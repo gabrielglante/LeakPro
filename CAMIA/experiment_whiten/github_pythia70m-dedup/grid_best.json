@@ -1,0 +1,62 @@
+{
+  "auc_fisher": {
+    "score": 0.16627150294250795,
+    "K": 25,
+    "weight": 72,
+    "gamma": null
+  },
+  "auc_pearson": {
+    "score": 0.858869963784518,
+    "K": 100,
+    "weight": 9,
+    "gamma": null
+  },
+  "auc_george": {
+    "score": 0.8553191489361701,
+    "K": 0,
+    "weight": 0,
+    "gamma": null
+  },
+  "auc_edgington": {
+    "score": 0.8572360230873699,
+    "K": 100,
+    "weight": 9,
+    "gamma": null
+  },
+  "tpr01_fisher": {
+    "score": 0.0015957446808510637,
+    "K": 0,
+    "weight": 0,
+    "gamma": null
+  },
+  "tpr01_pearson": {
+    "score": 0.43510638297872345,
+    "K": 100,
+    "weight": 72,
+    "gamma": null
+  },
+  "tpr01_george": {
+    "score": 0.4787234042553192,
+    "K": 100,
+    "weight": 18,
+    "gamma": null
+  },
+  "tpr01_edgington": {
+    "score": 0.5063829787234042,
+    "K": 100,
+    "weight": 9,
+    "gamma": null
+  },
+  "auc_log": {
+    "score": 0.8604741964689906,
+    "K": 0,
+    "weight": null,
+    "gamma": 1.0
+  },
+  "tpr01_log": {
+    "score": 0.5138297872340425,
+    "K": 0,
+    "weight": null,
+    "gamma": 1.0
+  }
+}

@@ -1,0 +1,2 @@
+domain,auc_edgington,auc_fisher,auc_pearson,auc_george,auc_log,tpr01_edgington,tpr01_fisher,tpr01_pearson,tpr01_george,tpr01_log
+arxiv,"(0.801, 0, 0)","(0.23, 100, 72)","(0.776, 25, 9)","(0.802, 0, 0)","(0.798, 0, '-')","(0.259, 0, 0)","(0.004, 25, 9)","(0.199, 0, 0)","(0.261, 0, 0)","(0.276, 0, '-')"

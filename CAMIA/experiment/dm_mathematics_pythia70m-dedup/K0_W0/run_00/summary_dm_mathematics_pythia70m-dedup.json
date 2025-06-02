@@ -1,0 +1,17 @@
+{
+  "model_tag": "pythia70m-dedup",
+  "domain": "dm_mathematics",
+  "nei_K": 0,
+  "nei_weight": 0,
+  "auc_fisher": 0.0599647266313933,
+  "auc_pearson": 0.91055681531872,
+  "auc_george": 0.9410430839002268,
+  "auc_edgington": 0.928445452254976,
+  "tpr01_fisher": 0.0,
+  "tpr01_pearson": 0.09523809523809523,
+  "tpr01_george": 0.7301587301587301,
+  "tpr01_edgington": 0.23809523809523808,
+  "nei_gamma": 1.0,
+  "auc_log": 0.9508692365835222,
+  "tpr01_log": 0.7301587301587301
+}
